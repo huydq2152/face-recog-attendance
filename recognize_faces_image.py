@@ -1,5 +1,5 @@
 # USAGE
-# python recognize_faces_image.py --personId 1 --encodings encodings --image .\test_images\toi.png 
+# python recognize_faces_image.py --personId 1 --encodings encodings --image .\test_images\1.png 
 import os
 import face_recognition
 import argparse

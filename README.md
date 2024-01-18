@@ -10,31 +10,14 @@
 2. Cài môi trường ảo
 
 ```
-python -m venv myenv
+python -m venv venv
 cd .\venv\Scripts\
 .\Activate.ps1
 
 ```
 
-3. Cài đặt dlib (không có GPU support)
+3. Cài đặt các thư viện cần thiết
 
 ```
-git clone https://github.com/davisking/dlib.git
-cd dlib
-mkdir build
-cd build
-cmake .. -DUSE_AVX_INSTRUCTIONS=1
-cmake --build .
-cd ..
-python setup.py install --yes USE_AVX_INSTRUCTIONS
-```
-
-4. Cài đặt các thư viện cần thiết
-
-```
-pip install dlib
-pip install face_recognition
-pip install opencv-python
-pip install imutils
-pip install setuptools (do import thủ công face_recognition_models)
+pip install --upgrade -r requirements.txt
 ```

@@ -1,0 +1,6 @@
+Flask
+dlib
+face_recognition
+opencv-python
+imutils
+setuptools
