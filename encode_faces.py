@@ -25,7 +25,6 @@ for folder in folders:
 
     if os.path.isdir(folder_path):
         # lấy paths của images trong dataset
-        print("[INFO] quantifying faces...")
         imagePaths = list(paths.list_images(folder_path))
 
         # khởi tạo list chứa known encodings và known names (để các test images so sánh)
@@ -34,6 +33,7 @@ for folder in folders:
         knownEncodings = []
         knownNames = []
 
+        print(f"[INFO] quantifying faces of person_id = {folder_name} ...")
         # duyệt qua các image paths
         for (i, imagePath) in enumerate(imagePaths):
             # lấy tên người từ imagepath
@@ -64,7 +64,7 @@ for folder in folders:
                 knownNames.append(name)
 
         # dump (lưu) the facial encodings + names vào ổ cứng
-        print("[INFO] serializing encodings...")
+        print(f"[INFO] serializing encodings of person_id = {folder_name} ...")
         data = {"encodings": knownEncodings, "names": knownNames}
 
         # lưu vào file có tên tương ứng với folder trong folder encodings
