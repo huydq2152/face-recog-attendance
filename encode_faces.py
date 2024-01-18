@@ -1,7 +1,3 @@
-""" Để lưu encodings và tên của các faces trong dataset vào file có tên tương ứng trong folder encodings"""
-# USAGE
-# python encode_faces.py --dataset dataset --encodings encodings
-
 from imutils import paths
 import pickle
 import cv2

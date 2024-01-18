@@ -1,14 +1,24 @@
-function encode_faces() {
-  fetch("/encode_faces", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({}),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => console.error("Error:", error));
-}
+$(document).ready(function () {
+  var selectId = $("#selectId");
+  var encodeFaceBtn = $("#encodeFaceBtn");
+
+  var data = [
+    { id: 1, name: "Người 1" },
+    { id: 2, name: "Người 2" },
+    { id: 3, name: "Người 3" },
+    { id: 4, name: "Người 4" },
+  ];
+
+  $.each(data, function (_index, item) {
+    var option = $("<option>").attr("value", item.id).text(item.name);
+    selectId.append(option);
+  });
+
+  encodeFaceBtn.on("click", function () {
+    $.ajax({
+      url: "/encode_faces",
+      type: "POST",
+      contentType: "application/json",
+    });
+  });
+});

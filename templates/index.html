@@ -1,43 +1,57 @@
-{% extends 'layout.html' %}
-
-{% block body %}
+{% extends 'layout.html' %} {% block body %}
 <div class="container">
-    <br><br>
-    <form action="#" method="POST" enctype="multipart/form-data">
-        <button type="button" class="btn btn-outline-secondary" onclick="encode_faces()">
-            Sinh file .pickle cho dataset
-        </button>
-        <br><br>
-        <div class="input-group">
-            <label for="formFile" class="form-label w-100">Chọn file ảnh muốn nhận diện</label>
-            <input type="file" class="form-control" name="image_name" required id="formFile">
-            <input type="submit" value="Tải lên" class="btn btn-outline-secondary">
-        </div>
-    </form>
+  <br /><br />
+  <form action="#" method="POST" enctype="multipart/form-data">
+    <button type="button" class="btn btn-outline-secondary" id="encodeFaceBtn">
+      Sinh file .pickle cho dataset
+    </button>
+    <br /><br />
+    <div class="input-group">
+      <label for="formFile" class="form-label w-100"
+        >Chọn file ảnh muốn nhận diện</label
+      >
+      <input
+        type="file"
+        class="form-control"
+        name="image_name"
+        required
+        id="formFile"
+      />
+      <select class="form-select" name="selected_id" required id="selectId">
+        <option value="" disabled selected>Chọn ID người</option>
+      </select>
+      <input type="submit" value="Tải lên" class="btn btn-outline-secondary" />
+    </div>
+  </form>
 </div>
 
 {% if upload %}
 <div class="container">
-    <br><br>
-    <table>
-        <tr>
-            <td>
-                <img class="rounded float-left img-fluid" src="/static/upload/{{ upload_image }}" alt="">
-            </td>
-            <td>
-                <img class="rounded float-right img-fluid"
-                    src="/static/face-detect-and-recognition/predict/{{ upload_image }}" alt="">
-            </td>
-        </tr>
-    </table>
-    <br>
-    <table style="border: solid black; width: 100%;">
-        <tr style="border: solid black;">
-            <th>Xác nhận chấm công = {{ isConfirmAttendance }}</th>
-        </tr>
-    </table>
+  <br /><br />
+  <table>
+    <tr>
+      <td>
+        <img
+          class="rounded float-left img-fluid"
+          src="/static/upload/{{ upload_image }}"
+          alt=""
+        />
+      </td>
+      <td>
+        <img
+          class="rounded float-right img-fluid"
+          src="/static/face-detect-and-recognition/predict/{{ upload_image }}"
+          alt=""
+        />
+      </td>
+    </tr>
+  </table>
+  <br />
+  <table style="border: solid black; width: 100%">
+    <tr style="border: solid black">
+      <th>Xác nhận chấm công = {{ isConfirmAttendance }}</th>
+    </tr>
+  </table>
 </div>
 
-{% endif %}
-
-{% endblock %}
+{% endif %} {% endblock %}
