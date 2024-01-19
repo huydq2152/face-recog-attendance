@@ -7,6 +7,8 @@ $(document).ready(function () {
     { id: 2, name: "Người 2" },
     { id: 3, name: "Người 3" },
     { id: 4, name: "Người 4" },
+    { id: 5, name: "Người 5" },
+    { id: 6, name: "Người 6" },
   ];
 
   $.each(data, function (_index, item) {
@@ -19,6 +21,8 @@ $(document).ready(function () {
       url: "/encode_faces",
       type: "POST",
       contentType: "application/json",
+    }).done(function (data) {
+      alert(data.message);
     });
   });
 });
