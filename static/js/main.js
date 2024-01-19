@@ -9,7 +9,9 @@ $(document).ready(function () {
   }).done(function (data) {
     let person_ids = data.person_ids;
     $.each(person_ids, function (_index, item) {
-      var option = $("<option>").attr("value", item).text(`Người ${item}`);
+      var option = $("<option>")
+        .attr("value", item)
+        .text(`Người có id = ${item}`);
       selectId.append(option);
     });
   });
