@@ -24,6 +24,19 @@ def index():
         return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance)
     return render_template('index.html', upload=False)
 
+@app.route('/check_attendance', methods=['POST'])
+def check_attendance():
+    if('selected_id' not in request.form):
+        return jsonify({'message': 'Selected_id is empty.'})
+    if('image_name' not in request.files):
+        return jsonify({'message': 'Image_name is empty.'})
+    person_id = request.form['selected_id']
+    upload_file = request.files['image_name']
+    filename = person_id + os.path.splitext(upload_file.filename)[1]
+    path_save = os.path.join(UPLOAD_PATH, filename)
+    upload_file.save(path_save)
+    return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': recognition(person_id, 'encodings', path_save, 'hog')})
+
 @app.route('/get_all_person_id', methods=['GET'])
 def get_all_person_id():
     person_ids = os.listdir(DATESET_PATH)
@@ -36,6 +49,10 @@ def encode_faces():
 
 @app.route('/upload_dataset', methods=['POST'])
 def upload_dataset():
+    if('person_id' not in request.form):
+        return jsonify({'message': 'Person_id is empty.'})
+    if('person_image' not in request.files):
+        return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
     upload_file = request.files['person_image']
 
