@@ -6,8 +6,9 @@
 
 ### Cài đặt và chạy project
 
-1. Cài visual c++ trong visual studio (chứa Window SDK, C++ complier, ... để có thể cài được thư viện dlib)
-2. Cài môi trường ảo
+1. Cài đặt python
+2. Cài visual c++ trong visual studio (chứa Window SDK, C++ complier, ... để có thể cài được thư viện dlib)
+3. Cài môi trường ảo
 
 ```
 python -m venv venv

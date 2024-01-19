@@ -44,7 +44,21 @@ def get_all_person_id():
 
 @app.route('/encode_faces', methods=['POST'])
 def encode_faces():
-    encode('dataset', 'encodings', 'hog')
+    encodings_folder = 'encodings'
+    dataset_folder = 'dataset'
+    
+    encodings_files = set(os.listdir(encodings_folder))
+    encodings_files_name = set()
+    for encodings_file in encodings_files:
+        if encodings_file.endswith('.pickle'):
+            encodings_files_name.add(encodings_file.split('.')[0])
+    
+    dataset_folders = set(os.listdir(dataset_folder))
+    
+    person_id_still_not_encode = dataset_folders - encodings_files_name
+    encode(dataset_folder, encodings_folder, 'hog', person_id_still_not_encode)
+    
+    # encode(dataset_folder, encodings_folder, 'hog')
     return jsonify({'message': 'Encode_faces done.'})
 
 @app.route('/upload_dataset', methods=['POST'])

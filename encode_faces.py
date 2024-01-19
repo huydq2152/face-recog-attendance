@@ -4,12 +4,12 @@ import cv2
 import os
 import face_recognition
 
-def encode(datasets_folder_name, encodings_folder_name, detection_method):
+def encode(datasets_folder_name, encodings_folder_name, detection_method, person_id_still_not_encode):
     folders = os.listdir(datasets_folder_name)
     for folder in folders:
         folder_path = os.path.join(datasets_folder_name, folder)
 
-        if os.path.isdir(folder_path):
+        if os.path.isdir(folder_path) and folder in person_id_still_not_encode:
             imagePaths = list(paths.list_images(folder_path))
 
             folder_name = os.path.basename(folder_path)
