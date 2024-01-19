@@ -2,18 +2,16 @@ $(document).ready(function () {
   var selectId = $("#selectId");
   var encodeFaceBtn = $("#encodeFaceBtn");
 
-  var data = [
-    { id: 1, name: "Người 1" },
-    { id: 2, name: "Người 2" },
-    { id: 3, name: "Người 3" },
-    { id: 4, name: "Người 4" },
-    { id: 5, name: "Người 5" },
-    { id: 6, name: "Người 6" },
-  ];
-
-  $.each(data, function (_index, item) {
-    var option = $("<option>").attr("value", item.id).text(item.name);
-    selectId.append(option);
+  $.ajax({
+    url: "/get_all_person_id",
+    type: "GET",
+    contentType: "application/json",
+  }).done(function (data) {
+    let person_ids = data.person_ids;
+    $.each(person_ids, function (_index, item) {
+      var option = $("<option>").attr("value", item).text(`Người ${item}`);
+      selectId.append(option);
+    });
   });
 
   encodeFaceBtn.on("click", function () {

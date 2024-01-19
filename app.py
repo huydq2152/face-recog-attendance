@@ -24,6 +24,11 @@ def index():
         return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance)
     return render_template('index.html', upload=False)
 
+@app.route('/get_all_person_id', methods=['GET'])
+def get_all_person_id():
+    person_ids = os.listdir(DATESET_PATH)
+    return jsonify({'person_ids': person_ids})
+
 @app.route('/encode_faces', methods=['POST'])
 def encode_faces():
     encode('dataset', 'encodings', 'hog')
