@@ -31,7 +31,7 @@ def recognition(person_id, encodings_folder_name, image_path, detection_method):
         cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)
         y = top - 15 if top - 15 > 15 else top + 15
 
-        cv2.putText(image, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 1)
+        cv2.putText(image, f"person_id = {name}", (left, y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 3)
 
     filename = os.path.basename(image_path)
     cv2.imwrite(os.path.join('static/face-detect-and-recognition/predict/{}').format(filename), image)

@@ -14,7 +14,7 @@ def index():
     if request.method == 'POST':
         person_id = request.form['selected_id']
         upload_file = request.files['image_name']
-        filename = upload_file.filename
+        filename = person_id + os.path.splitext(upload_file.filename)[1]
         path_save = os.path.join(UPLOAD_PATH, filename)
         upload_file.save(path_save)
         if recognition(person_id, 'encodings', path_save, 'hog') == True:
