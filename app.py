@@ -28,10 +28,10 @@ def index():
 def check_attendance():
     if('person_id' not in request.form):
         return jsonify({'message': 'Person_id is empty.'})
-    if('image_name' not in request.files):
-        return jsonify({'message': 'Image_name is empty.'})
+    if('person_image' not in request.files):
+        return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
-    upload_file = request.files['image_name']
+    upload_file = request.files['person_image']
     filename = person_id + os.path.splitext(upload_file.filename)[1]
     path_save = os.path.join(UPLOAD_PATH, filename)
     upload_file.save(path_save)
