@@ -25,8 +25,8 @@ def recognition(person_id, encodings_folder_name, image_path, detection_method):
         if match:
             name = data["names"][0]
             res = True
-            break
         names.append(name)
+        break
 
     for ((top, right, bottom, left), name) in zip(boxes, names):
         cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)
@@ -35,7 +35,7 @@ def recognition(person_id, encodings_folder_name, image_path, detection_method):
         cv2.putText(image, f"person_id = {name}", (left, y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 3)
 
     filename = os.path.basename(image_path)
-    cv2.imwrite(os.path.join('static/face-detect-and-recognition/predict/{}').format(filename), image)
+    cv2.imwrite(os.path.join('static/img/face-detect-and-recognition/predict/{}').format(filename), image)
 
     return res
 

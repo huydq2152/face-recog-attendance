@@ -1,5 +1,6 @@
 $(document).ready(function () {
-  var selectId = $("#selectId");
+  var selectIdForEncodeDataset = $("#selectIdForEncodeDataset");
+  var selectIdForCheckAttendance = $("#selectIdForCheckAttendance");
   var encodeFacesBtn = $("#encodeFacesBtn");
   var encodeFaceBtn = $("#encodeFaceBtn");
 
@@ -13,7 +14,8 @@ $(document).ready(function () {
       var option = $("<option>")
         .attr("value", item)
         .text(`Người có id = ${item}`);
-      selectId.append(option);
+      selectIdForEncodeDataset.append(option);
+      selectIdForCheckAttendance.append(option.clone());
     });
   });
 
@@ -28,13 +30,15 @@ $(document).ready(function () {
   });
 
   encodeFaceBtn.on("click", function () {
-    var person_id = selectId.val();
-    console.log("person_id", person_id);
+    var formData = new FormData();
+    formData.append("person_id", selectIdForEncodeDataset.val());
+
     $.ajax({
       url: "/encode_face",
       type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({ person_id: person_id }),
+      data: formData,
+      processData: false,
+      contentType: false,
     }).done(function (data) {
       alert(data.message);
     });

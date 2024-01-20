@@ -6,13 +6,13 @@ from recognize_faces_image import recognition
 
 app = Flask(__name__)
 
-UPLOAD_PATH = ('static/upload/')
+UPLOAD_PATH = ('static/img/upload/')
 DATESET_PATH = ('dataset/')
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
-        person_id = request.form['selected_id']
+        person_id = request.form['person_id']
         upload_file = request.files['image_name']
         filename = person_id + os.path.splitext(upload_file.filename)[1]
         path_save = os.path.join(UPLOAD_PATH, filename)
@@ -26,11 +26,11 @@ def index():
 
 @app.route('/check_attendance', methods=['POST'])
 def check_attendance():
-    if('selected_id' not in request.form):
-        return jsonify({'message': 'Selected_id is empty.'})
+    if('person_id' not in request.form):
+        return jsonify({'message': 'Person_id is empty.'})
     if('image_name' not in request.files):
         return jsonify({'message': 'Image_name is empty.'})
-    person_id = request.form['selected_id']
+    person_id = request.form['person_id']
     upload_file = request.files['image_name']
     filename = person_id + os.path.splitext(upload_file.filename)[1]
     path_save = os.path.join(UPLOAD_PATH, filename)
@@ -62,10 +62,9 @@ def encode_faces():
 
 @app.route('/encode_face', methods=['POST'])
 def encode_face():
-    data = request.get_json()
-    if('person_id' not in data):
+    if('person_id' not in request.form):
         return jsonify({'message': 'Person_id is empty.'})
-    person_id = data.get('person_id')
+    person_id = request.form['person_id']
     encode('dataset', 'encodings', 'hog', [person_id])
     return jsonify({'message': 'Encode_face done.'})
 

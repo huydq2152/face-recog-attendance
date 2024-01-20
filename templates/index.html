@@ -1,21 +1,29 @@
 {% extends 'layout.html' %} {% block body %}
 <br /><br />
 <div class="container">
-  <select class="form-select" name="selected_id" required id="selectId">
-    <option value="" disabled selected>Chọn người</option>
-  </select>
-  <br /><br />
   <button type="button" class="btn btn-outline-secondary" id="encodeFacesBtn">
     Encode cho tất cả dataset mới
   </button>
-  <button type="button" class="btn btn-outline-secondary" id="encodeFaceBtn">
-    Encode cho dataset của người đã chọn
-  </button>
+
+  <br /><br />
+  <div class="input-group">
+    <label for="formFile" class="form-label w-100">Chọn người để encode dataset</label>
+    <select class="form-select" name="person_id" required id="selectIdForEncodeDataset">
+      <option value="" disabled selected>Chọn người</option>
+    </select>
+    <button type="button" class="btn btn-outline-secondary" id="encodeFaceBtn">
+      Encode cho dataset của người đã chọn
+    </button>
+  </div>
+
   <br /><br />
   <form action="#" method="POST" enctype="multipart/form-data">
     <div class="input-group">
       <label for="formFile" class="form-label w-100">Chọn file ảnh để chấm công người đã chọn</label>
       <input type="file" class="form-control" name="image_name" required id="formFile" />
+      <select class="form-select" name="person_id" required id="selectIdForCheckAttendance">
+        <option value="" disabled selected>Chọn người</option>
+      </select>
       <input type="submit" value="Tải lên" class="btn btn-outline-secondary" />
     </div>
   </form>
@@ -27,11 +35,11 @@
   <table>
     <tr>
       <td>
-        <img class="rounded float-left img-fluid" src="/static/upload/{{ upload_image }}" alt="" />
+        <img class="rounded float-left img-fluid" src="/static/img/upload/{{ upload_image }}" alt="" />
       </td>
       <td>
-        <img class="rounded float-right img-fluid" src="/static/face-detect-and-recognition/predict/{{ upload_image }}"
-          alt="" />
+        <img class="rounded float-right img-fluid"
+          src="/static/img/face-detect-and-recognition/predict/{{ upload_image }}" alt="" />
       </td>
     </tr>
   </table>
