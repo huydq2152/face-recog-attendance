@@ -6,19 +6,27 @@
 
 ### Cài đặt và chạy project
 
-1. Cài đặt python
+1. Cài đặt python https://www.python.org/downloads/
 2. Cài visual c++ trong visual studio (chứa Window SDK, C++ complier, ... để có thể cài được thư viện dlib)
-3. Cài môi trường ảo
+3. Mở project và cd vào thư mục gốc
+4. Cài môi trường ảo
 
 ```
 python -m venv venv
 cd .\venv\Scripts\
 .\Activate.ps1
-
 ```
 
-3. Cài đặt các thư viện cần thiết
+5. Cài đặt các thư viện cần thiết
 
 ```
 pip install --upgrade -r requirements.txt
 ```
+
+6. Run app
+
+```
+py .\app.py
+```
+
+7. Ảnh để test trong thư mục test_img

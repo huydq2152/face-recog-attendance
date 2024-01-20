@@ -1,5 +1,6 @@
 $(document).ready(function () {
   var selectId = $("#selectId");
+  var encodeFacesBtn = $("#encodeFacesBtn");
   var encodeFaceBtn = $("#encodeFaceBtn");
 
   $.ajax({
@@ -16,11 +17,24 @@ $(document).ready(function () {
     });
   });
 
-  encodeFaceBtn.on("click", function () {
+  encodeFacesBtn.on("click", function () {
     $.ajax({
       url: "/encode_faces",
       type: "POST",
       contentType: "application/json",
+    }).done(function (data) {
+      alert(data.message);
+    });
+  });
+
+  encodeFaceBtn.on("click", function () {
+    var person_id = selectId.val();
+    console.log("person_id", person_id);
+    $.ajax({
+      url: "/encode_face",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({ person_id: person_id }),
     }).done(function (data) {
       alert(data.message);
     });

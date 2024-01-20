@@ -25,6 +25,7 @@ def recognition(person_id, encodings_folder_name, image_path, detection_method):
         if match:
             name = data["names"][0]
             res = True
+            break
         names.append(name)
 
     for ((top, right, bottom, left), name) in zip(boxes, names):

@@ -58,8 +58,16 @@ def encode_faces():
     person_id_still_not_encode = dataset_folders - encodings_files_name
     encode(dataset_folder, encodings_folder, 'hog', person_id_still_not_encode)
     
-    # encode(dataset_folder, encodings_folder, 'hog')
     return jsonify({'message': 'Encode_faces done.'})
+
+@app.route('/encode_face', methods=['POST'])
+def encode_face():
+    data = request.get_json()
+    if('person_id' not in data):
+        return jsonify({'message': 'Person_id is empty.'})
+    person_id = data.get('person_id')
+    encode('dataset', 'encodings', 'hog', [person_id])
+    return jsonify({'message': 'Encode_face done.'})
 
 @app.route('/upload_dataset', methods=['POST'])
 def upload_dataset():
