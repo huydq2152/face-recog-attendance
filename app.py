@@ -1,7 +1,11 @@
 import uuid
+import cv2
 from flask import Flask, render_template, request, jsonify
 import os
+
+import numpy as np
 from encode_faces import encode
+from helper import resize_image
 from recognize_faces_image import recognition
 
 app = Flask(__name__)
@@ -13,10 +17,12 @@ DATESET_PATH = ('dataset/')
 def index():
     if request.method == 'POST':
         person_id = request.form['person_id']
-        upload_file = request.files['image_name']
-        filename = person_id + os.path.splitext(upload_file.filename)[1]
+        request_file = request.files['image_name']
+        image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
+        resized_image = resize_image(image, (300, 300))
+        filename = person_id + os.path.splitext(request_file.filename)[1]
         path_save = os.path.join(UPLOAD_PATH, filename)
-        upload_file.save(path_save)
+        cv2.imwrite(path_save, resized_image)
         isConfirmAttendance, person_id, percent_similarity = recognition(person_id, 'encodings', path_save, 'hog')
         return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance, person_id = person_id, percent_similarity = percent_similarity)
     return render_template('index.html', upload=False)
@@ -28,10 +34,12 @@ def check_attendance():
     if('person_image' not in request.files):
         return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
-    upload_file = request.files['person_image']
-    filename = person_id + os.path.splitext(upload_file.filename)[1]
+    request_file = request.files['image_name']
+    image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
+    resized_image = resize_image(image, (300, 300))
+    filename = person_id + os.path.splitext(request_file.filename)[1]
     path_save = os.path.join(UPLOAD_PATH, filename)
-    upload_file.save(path_save)
+    cv2.imwrite(path_save, resized_image)
     isConfirmAttendance, person_id, percent_similarity = recognition(person_id, 'encodings', path_save, 'hog')
     return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
 
@@ -73,15 +81,17 @@ def upload_dataset():
     if('person_image' not in request.files):
         return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
-    upload_file = request.files['person_image']
+    request_file = request.files['person_image']
+    image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
+    resized_image = resize_image(image, (300, 300))
 
     folder_path = os.path.join(DATESET_PATH, person_id)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
         
-    unique_filename = str(uuid.uuid4()) + os.path.splitext(upload_file.filename)[1]
+    unique_filename = str(uuid.uuid4()) + os.path.splitext(request_file.filename)[1]
     path_save = os.path.join(folder_path, unique_filename)
-    upload_file.save(path_save)
+    cv2.imwrite(path_save, resized_image)
     return jsonify({'message': 'Upload dataset done.'})
 
 if __name__ == "__main__":
