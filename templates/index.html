@@ -44,11 +44,11 @@
     </tr>
   </table>
   <br />
-  <table style="border: solid black; width: 100%">
-    <tr style="border: solid black">
-      <th>Xác nhận chấm công = {{ isConfirmAttendance }}</th>
-    </tr>
-  </table>
+  <div style="border: solid black; width: 100%; padding: 10px;">
+    <div>Xác nhận chấm công = {{ isConfirmAttendance }}</div>
+    <div>Id người = {{ person_id }}</div>
+    <div>Phần trăm giống = {{ percent_similarity }} %</div>
+  </div>
 </div>
 
 {% endif %} {% endblock %}

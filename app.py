@@ -17,11 +17,8 @@ def index():
         filename = person_id + os.path.splitext(upload_file.filename)[1]
         path_save = os.path.join(UPLOAD_PATH, filename)
         upload_file.save(path_save)
-        if recognition(person_id, 'encodings', path_save, 'hog') == True:
-            isConfirmAttendance = 'Đúng'
-        else:
-            isConfirmAttendance = 'Sai'
-        return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance)
+        isConfirmAttendance, person_id, percent_similarity = recognition(person_id, 'encodings', path_save, 'hog')
+        return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance, person_id = person_id, percent_similarity = percent_similarity)
     return render_template('index.html', upload=False)
 
 @app.route('/check_attendance', methods=['POST'])
@@ -35,7 +32,8 @@ def check_attendance():
     filename = person_id + os.path.splitext(upload_file.filename)[1]
     path_save = os.path.join(UPLOAD_PATH, filename)
     upload_file.save(path_save)
-    return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': recognition(person_id, 'encodings', path_save, 'hog')})
+    isConfirmAttendance, person_id, percent_similarity = recognition(person_id, 'encodings', path_save, 'hog')
+    return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
 
 @app.route('/get_all_person_id', methods=['GET'])
 def get_all_person_id():

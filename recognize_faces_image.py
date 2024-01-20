@@ -4,7 +4,6 @@ import pickle
 import cv2
 
 def recognition(person_id, encodings_folder_name, image_path, detection_method):
-    # load encodings đã lưu từ file
     print("[INFO] loading encodings...")
     id = person_id
     pickle_file_path = os.path.join(encodings_folder_name, f"{id}.pickle")
@@ -18,26 +17,34 @@ def recognition(person_id, encodings_folder_name, image_path, detection_method):
     encodings = face_recognition.face_encodings(rgb, boxes)
 
     names = []
-    res = False
+    isConfirmAttendance = False
+    percent_similarity = 0
     for encoding in encodings:
-        match = any(face_recognition.compare_faces(data["encodings"], encoding, 0.3))      
+        match = any(face_recognition.compare_faces(data["encodings"], encoding, 0.5))      
         name = "Unknown"    
         if match:
+            percent_similarity = calculate_similarity_percent(encoding, data["encodings"])
             name = data["names"][0]
-            res = True
+            isConfirmAttendance = True
         names.append(name)
         break
 
     for ((top, right, bottom, left), name) in zip(boxes, names):
         cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)
-        y = top - 15 if top - 15 > 15 else top + 15
-
-        cv2.putText(image, f"person_id = {name}", (left, y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 3)
 
     filename = os.path.basename(image_path)
     cv2.imwrite(os.path.join('static/img/face-detect-and-recognition/predict/{}').format(filename), image)
 
-    return res
+    return isConfirmAttendance, name, percent_similarity
+
+
+def calculate_similarity_percent(encodings, face_to_check):
+    distances = face_recognition.face_distance(encodings, face_to_check)
+    similarities = [(1 - distance) for distance in distances]  
+    max_similarity = max(similarities)
+    return max_similarity * 100  
+    
+
 
 
 
