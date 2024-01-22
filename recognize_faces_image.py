@@ -37,6 +37,28 @@ def recognition(person_id, encodings_folder_name, image_path, detection_method):
 
     return isConfirmAttendance, name, percent_similarity
 
+def recognition_not_save_img(person_id, encodings_folder_name, image, detection_method):
+    id = person_id
+    pickle_file_path = os.path.join(encodings_folder_name, f"{id}.pickle")
+    data = pickle.loads(open(pickle_file_path, "rb").read())     
+
+    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    boxes = face_recognition.face_locations(rgb, model=detection_method)
+    encodings = face_recognition.face_encodings(rgb, boxes)
+
+    isConfirmAttendance = False
+    percent_similarity = 0
+    for encoding in encodings:
+        match = any(face_recognition.compare_faces(data["encodings"], encoding, 0.5))      
+        name = "Unknown"    
+        if match:
+            percent_similarity = calculate_similarity_percent(encoding, data["encodings"])
+            name = data["names"][0]
+            isConfirmAttendance = True
+        break
+
+    return isConfirmAttendance, name, percent_similarity
 
 def calculate_similarity_percent(encodings, face_to_check):
     distances = face_recognition.face_distance(encodings, face_to_check)

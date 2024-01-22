@@ -6,7 +6,7 @@ import os
 import numpy as np
 from encode_faces import encode
 from helper import resize_image
-from recognize_faces_image import recognition
+from recognize_faces_image import recognition, recognition_not_save_img
 
 app = Flask(__name__)
 
@@ -34,13 +34,10 @@ def check_attendance():
     if('person_image' not in request.files):
         return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
-    request_file = request.files['image_name']
+    request_file = request.files['person_image']
     image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
     resized_image = resize_image(image, (300, 300))
-    filename = person_id + os.path.splitext(request_file.filename)[1]
-    path_save = os.path.join(UPLOAD_PATH, filename)
-    cv2.imwrite(path_save, resized_image)
-    isConfirmAttendance, person_id, percent_similarity = recognition(person_id, 'encodings', path_save, 'hog')
+    isConfirmAttendance, person_id, percent_similarity = recognition_not_save_img(person_id, 'encodings', resized_image, 'hog')
     return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
 
 @app.route('/get_all_person_id', methods=['GET'])
