@@ -30,3 +30,9 @@ py .\app.py
 ```
 
 7. Ảnh để test trong thư mục test_img
+
+### Deploy qua IIS
+
+1. https://mtuseeq.medium.com/how-to-deploy-flask-app-on-windows-server-using-fastcgi-and-iis-73d8139d5342 ( chú ý do dùng venv để run project nên cài đặt FastCGI cũng phải cài đặt trong venv)
+2. Cần chuyển identity của application pool từ 'ApplicationPoolIdentity' thành 'LocalSystem'
+3. Có thể phải sửa ở cả handlemapping trong IIS: https://www.youtube.com/watch?v=aJfHVXg-Tu8&ab_channel=TechieBlogging (7:20)

@@ -92,4 +92,4 @@ def upload_dataset():
     return jsonify({'message': 'Upload dataset done.'})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
