@@ -1,3 +1,4 @@
+import time
 import uuid
 import cv2
 from flask import Flask, render_template, request, jsonify
@@ -27,8 +28,11 @@ def index():
         filename = person_id + os.path.splitext(request_file.filename)[1]
         path_save = os.path.join(UPLOAD_PATH, filename)
         cv2.imwrite(path_save, resized_image)
+        start = time.time()
         isConfirmAttendance, person_id, percent_similarity = recognition(person_id, f'encodings/{detect_face_method}', path_save, detect_face_method)
-        return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance, person_id = person_id, percent_similarity = percent_similarity)
+        end = time.time()
+        excution_time_str = f'{detect_face_method} - excution time: {end - start}'
+        return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance, person_id = person_id, percent_similarity = percent_similarity, excution_time_str = excution_time_str)
     return render_template('index.html', upload=False)
 
 @app.route('/check_attendance', methods=['POST'])
