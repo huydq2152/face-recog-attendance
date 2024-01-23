@@ -36,3 +36,21 @@ py .\app.py
 1. https://mtuseeq.medium.com/how-to-deploy-flask-app-on-windows-server-using-fastcgi-and-iis-73d8139d5342 ( chú ý do dùng venv để run project nên cài đặt FastCGI cũng phải cài đặt trong venv)
 2. Cần chuyển identity của application pool từ 'ApplicationPoolIdentity' thành 'LocalSystem'
 3. Có thể phải sửa ở cả handlemapping trong IIS: https://www.youtube.com/watch?v=aJfHVXg-Tu8&ab_channel=TechieBlogging (7:20)
+
+# Cài đặt để chạy trên gpu
+
+1. Cài cuda toolkit và cuDNN : https://www.youtube.com/watch?v=lw5dpTl0yZE
+2. cd vào thư mục root
+3. Cài đặt dlib với GPU
+
+```
+pip install cmake
+git clone https://github.com/davisking/dlib.git
+cd dlib
+mkdir build
+cd build
+cmake .. -DDLIB_USE_CUDA=1 -DUSE_AVX_INSTRUCTIONS=1
+cmake --build .
+cd ..
+python setup.py install --set USE_AVX_INSTRUCTIONS=1 --set DLIB_USE_CUDA=1
+```
