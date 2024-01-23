@@ -1,15 +1,28 @@
 {% extends 'layout.html' %} {% block body %}
 <br /><br />
 <div class="container">
-  <button type="button" class="btn btn-outline-secondary" id="encodeFacesBtn">
-    Encode cho tất cả dataset mới
-  </button>
+  <div class="input-group">
+    <label for="formFile" class="form-label w-100">Encode tất cả dataset mới</label>
+    <select class="form-select" name="detect_face_method" required id="selectDetectFaceMethodForEncodeFaces">
+      <option value="" disabled selected>Chọn phương thức detect face</option>
+      <option value="hog">HOG</option>
+      <option value="cnn">CNN</option>
+    </select>
+    <button type="button" class="btn btn-outline-secondary" id="encodeFacesBtn">
+      Encode cho tất cả dataset mới
+    </button>
+  </div>
 
   <br /><br />
   <div class="input-group">
     <label for="formFile" class="form-label w-100">Chọn người để encode dataset</label>
-    <select class="form-select" name="person_id" required id="selectIdForEncodeDataset">
+    <select class="form-select" name="person_id" required id="selectIdForEncodeFace">
       <option value="" disabled selected>Chọn người</option>
+    </select>
+    <select class="form-select" name="detect_face_method" required id="selectDetectFaceMethodForEncodeFace">
+      <option value="" disabled selected>Chọn phương thức detect face</option>
+      <option value="hog">HOG</option>
+      <option value="cnn">CNN</option>
     </select>
     <button type="button" class="btn btn-outline-secondary" id="encodeFaceBtn">
       Encode cho dataset của người đã chọn
@@ -23,6 +36,11 @@
       <input type="file" class="form-control" name="image_name" required id="formFile" />
       <select class="form-select" name="person_id" required id="selectIdForCheckAttendance">
         <option value="" disabled selected>Chọn người</option>
+      </select>
+      <select class="form-select" name="detect_face_method" required id="selectDetectFaceMethodForCheckAttendance">
+        <option value="" disabled selected>Chọn phương thức detect face</option>
+        <option value="hog">HOG</option>
+        <option value="cnn">CNN</option>
       </select>
       <input type="submit" value="Tải lên" class="btn btn-outline-secondary" />
     </div>

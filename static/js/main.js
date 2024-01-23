@@ -1,5 +1,13 @@
 $(document).ready(function () {
-  var selectIdForEncodeDataset = $("#selectIdForEncodeDataset");
+  var selectDetectFaceMethodForEncodeFaces = $(
+    "#selectDetectFaceMethodForEncodeFaces"
+  );
+
+  var selectDetectFaceMethodForEncodeFace = $(
+    "#selectDetectFaceMethodForEncodeFace"
+  );
+
+  var selectIdForEncodeFace = $("#selectIdForEncodeFace");
   var selectIdForCheckAttendance = $("#selectIdForCheckAttendance");
   var encodeFacesBtn = $("#encodeFacesBtn");
   var encodeFaceBtn = $("#encodeFaceBtn");
@@ -14,16 +22,23 @@ $(document).ready(function () {
       var option = $("<option>")
         .attr("value", item)
         .text(`Người có id = ${item}`);
-      selectIdForEncodeDataset.append(option);
+      selectIdForEncodeFace.append(option);
       selectIdForCheckAttendance.append(option.clone());
     });
   });
 
   encodeFacesBtn.on("click", function () {
+    var formData = new FormData();
+    formData.append(
+      "detect_face_method",
+      selectDetectFaceMethodForEncodeFaces.val()
+    );
     $.ajax({
       url: "/encode_faces",
       type: "POST",
-      contentType: "application/json",
+      data: formData,
+      processData: false,
+      contentType: false,
     }).done(function (data) {
       alert(data.message);
     });
@@ -31,7 +46,11 @@ $(document).ready(function () {
 
   encodeFaceBtn.on("click", function () {
     var formData = new FormData();
-    formData.append("person_id", selectIdForEncodeDataset.val());
+    formData.append("person_id", selectIdForEncodeFace.val());
+    formData.append(
+      "detect_face_method",
+      selectDetectFaceMethodForEncodeFace.val()
+    );
 
     $.ajax({
       url: "/encode_face",

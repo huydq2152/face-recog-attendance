@@ -17,13 +17,14 @@ DATESET_PATH = ('dataset/')
 def index():
     if request.method == 'POST':
         person_id = request.form['person_id']
+        detect_face_method = request.form['detect_face_method']
         request_file = request.files['image_name']
         image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
         resized_image = resize_image(image, (300, 300))
         filename = person_id + os.path.splitext(request_file.filename)[1]
         path_save = os.path.join(UPLOAD_PATH, filename)
         cv2.imwrite(path_save, resized_image)
-        isConfirmAttendance, person_id, percent_similarity = recognition(person_id, 'encodings', path_save, 'hog')
+        isConfirmAttendance, person_id, percent_similarity = recognition(person_id, f'encodings/{detect_face_method}', path_save, detect_face_method)
         return render_template('index.html', upload=True, upload_image = filename, isConfirmAttendance = isConfirmAttendance, person_id = person_id, percent_similarity = percent_similarity)
     return render_template('index.html', upload=False)
 
@@ -31,13 +32,16 @@ def index():
 def check_attendance():
     if('person_id' not in request.form):
         return jsonify({'message': 'Person_id is empty.'})
+    if('detect_face_method' not in request.form):
+        return jsonify({'message': 'Detect_face_method is empty.'})
     if('person_image' not in request.files):
         return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
+    detect_face_method = request.form['detect_face_method']
     request_file = request.files['person_image']
     image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
     resized_image = resize_image(image, (300, 300))
-    isConfirmAttendance, person_id, percent_similarity = recognition_not_save_img(person_id, 'encodings', resized_image, 'hog')
+    isConfirmAttendance, person_id, percent_similarity = recognition_not_save_img(person_id, f'encodings/{detect_face_method}', resized_image, detect_face_method)
     return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
 
 @app.route('/get_all_person_id', methods=['GET'])
@@ -47,7 +51,10 @@ def get_all_person_id():
 
 @app.route('/encode_faces', methods=['POST'])
 def encode_faces():
-    encodings_folder = 'encodings'
+    if('detect_face_method' not in request.form):
+        return jsonify({'message': 'Detect_face_method is empty.'})
+    detect_face_method = request.form['detect_face_method']
+    encodings_folder = f'encodings/{detect_face_method}'
     dataset_folder = 'dataset'
     
     encodings_files = set(os.listdir(encodings_folder))
@@ -59,7 +66,7 @@ def encode_faces():
     dataset_folders = set(os.listdir(dataset_folder))
     
     person_id_still_not_encode = dataset_folders - encodings_files_name
-    encode(dataset_folder, encodings_folder, 'hog', person_id_still_not_encode)
+    encode(dataset_folder, encodings_folder, detect_face_method, person_id_still_not_encode)
     
     return jsonify({'message': 'Encode_faces done.'})
 
@@ -67,8 +74,15 @@ def encode_faces():
 def encode_face():
     if('person_id' not in request.form):
         return jsonify({'message': 'Person_id is empty.'})
+    if('detect_face_method' not in request.form):
+        return jsonify({'message': 'Detect_face_method is empty.'})
     person_id = request.form['person_id']
-    encode('dataset', 'encodings', 'hog', [person_id])
+    detect_face_method = request.form['detect_face_method']
+
+    encodings_folder = f'encodings/{detect_face_method}'
+    dataset_folder = 'dataset'
+
+    encode(dataset_folder, encodings_folder, detect_face_method, [person_id])
     return jsonify({'message': 'Encode_face done.'})
 
 @app.route('/upload_dataset', methods=['POST'])
