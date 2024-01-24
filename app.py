@@ -9,8 +9,9 @@ import numpy as np
 from encode_faces import encode
 from helper import resize_image
 from recognize_faces_image import recognition, recognition_not_save_img
+
 # import dlib
-# dlib.DLIB_USE_CUDA
+# print(dlib.DLIB_USE_CUDA) # Return true if dlib is using CUDA
 # print(dlib.cuda.get_num_devices())
 
 app = Flask(__name__)

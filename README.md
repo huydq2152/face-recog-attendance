@@ -17,7 +17,7 @@ cd .\venv\Scripts\
 .\Activate.ps1
 ```
 
-5. Cài đặt các thư viện cần thiết
+5. Cài đặt các thư viện cần thiết (nếu chạy trên máy có GPU thì bỏ dlib và face_recognition trong file requirements.txt)
 
 ```
 pip install --upgrade -r requirements.txt
@@ -31,16 +31,10 @@ py .\app.py
 
 7. Ảnh để test trong thư mục test_img
 
-### Deploy qua IIS
-
-1. https://mtuseeq.medium.com/how-to-deploy-flask-app-on-windows-server-using-fastcgi-and-iis-73d8139d5342 ( chú ý do dùng venv để run project nên cài đặt FastCGI cũng phải cài đặt trong venv)
-2. Cần chuyển identity của application pool từ 'ApplicationPoolIdentity' thành 'LocalSystem'
-3. Có thể phải sửa ở cả handlemapping trong IIS: https://www.youtube.com/watch?v=aJfHVXg-Tu8&ab_channel=TechieBlogging (7:20)
-
 # Cài đặt để chạy trên gpu
 
 1. Cài cuda toolkit và cuDNN : https://www.youtube.com/watch?v=lw5dpTl0yZE
-2. cd vào thư mục root
+2. cd vào thư mục venv/Lib
 3. Cài đặt dlib với GPU
 
 ```
@@ -53,3 +47,21 @@ cmake --build .
 cd ..
 python setup.py install --set USE_AVX_INSTRUCTIONS=1 --set DLIB_USE_CUDA=1
 ```
+
+4. Cài face_recognition
+
+```
+pip install face_recognition
+```
+
+5. Nếu sau khi cài, run app lỗi thì vào file **init**.py của thư mục dlib vừa cài đặt và sửa đoạn code thêm GPU
+
+```
+if 'ON' == 'ON':
+```
+
+### Deploy qua IIS
+
+1. https://mtuseeq.medium.com/how-to-deploy-flask-app-on-windows-server-using-fastcgi-and-iis-73d8139d5342 ( chú ý do dùng venv để run project nên cài đặt FastCGI cũng phải cài đặt trong venv)
+2. Cần chuyển identity của application pool từ 'ApplicationPoolIdentity' thành 'LocalSystem'
+3. Có thể phải sửa ở cả handlemapping trong IIS: https://www.youtube.com/watch?v=aJfHVXg-Tu8&ab_channel=TechieBlogging (7:20)
