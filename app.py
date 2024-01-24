@@ -3,6 +3,7 @@ import uuid
 import cv2
 from flask import Flask, render_template, request, jsonify
 import os
+import hashlib
 
 import numpy as np
 from encode_faces import encode
@@ -96,20 +97,25 @@ def encode_face():
 def upload_dataset():
     if('person_id' not in request.form):
         return jsonify({'message': 'Person_id is empty.'})
-    if('person_image' not in request.files):
-        return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
-    request_file = request.files['person_image']
-    image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
-    resized_image = resize_image(image, (300, 300))
 
-    folder_path = os.path.join(DATESET_PATH, person_id)
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
+    request_files = request.files.getlist('person_image')
+    if not request_files:
+        return jsonify({'message': 'Person_image is empty.'})
+    
+    for request_file in request_files:
+        image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
+        resized_image = resize_image(image, (300, 300))
+
+        folder_path = os.path.join(DATESET_PATH, person_id)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
+        image_hash = hashlib.md5(resized_image.tobytes()).hexdigest()
+        unique_filename = f"{image_hash}{os.path.splitext(request_file.filename)[1]}"
+        path_save = os.path.join(folder_path, unique_filename)
+        cv2.imwrite(path_save, resized_image)
         
-    unique_filename = str(uuid.uuid4()) + os.path.splitext(request_file.filename)[1]
-    path_save = os.path.join(folder_path, unique_filename)
-    cv2.imwrite(path_save, resized_image)
     return jsonify({'message': 'Upload dataset done.'})
 
 if __name__ == "__main__":
