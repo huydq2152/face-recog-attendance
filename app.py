@@ -99,7 +99,7 @@ def upload_dataset():
         return jsonify({'message': 'Person_id is empty.'})
     person_id = request.form['person_id']
 
-    request_files = request.files.getlist('person_image')
+    request_files = request.files.getlist('person_images')
     if not request_files:
         return jsonify({'message': 'Person_image is empty.'})
     
@@ -115,7 +115,7 @@ def upload_dataset():
         unique_filename = f"{image_hash}{os.path.splitext(request_file.filename)[1]}"
         path_save = os.path.join(folder_path, unique_filename)
         cv2.imwrite(path_save, resized_image)
-        
+
     return jsonify({'message': 'Upload dataset done.'})
 
 if __name__ == "__main__":
