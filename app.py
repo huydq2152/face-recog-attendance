@@ -1,9 +1,10 @@
+from io import BytesIO
 import time
-import uuid
 import cv2
 from flask import Flask, render_template, request, jsonify
 import os
 import hashlib
+from urllib.request import urlopen
 
 import numpy as np
 from encode_faces import encode
@@ -43,13 +44,32 @@ def check_attendance():
         return jsonify({'message': 'Person_id is empty.'})
     if('detect_face_method' not in request.form):
         return jsonify({'message': 'Detect_face_method is empty.'})
+    if('origin_image_url' not in request.form):
+        return jsonify({'message': 'Origin_image_url is empty.'})
     if('person_image' not in request.files):
         return jsonify({'message': 'Person_image is empty.'})
     person_id = request.form['person_id']
     detect_face_method = request.form['detect_face_method']
+    origin_image_url = request.form['origin_image_url']
     request_file = request.files['person_image']
+
+    folder_path = os.path.join(DATESET_PATH, person_id)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    image_url_hash = hashlib.md5(origin_image_url.encode()).hexdigest()
+    unique_filename = f"{image_url_hash}{os.path.splitext(request_file.filename)[1]}"
+    path_save = os.path.join(folder_path, unique_filename)
+    if not os.path.exists(path_save):
+        response = urlopen(origin_image_url)
+        with open(path_save, 'wb') as file:
+            file.write(response.read())
+            encodings_folder = f'encodings/{detect_face_method}'
+            dataset_folder = 'dataset'
+            encode(dataset_folder, encodings_folder, detect_face_method, [person_id])
+
     image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
     resized_image = resize_image(image, (300, 300))
+
     isConfirmAttendance, person_id, percent_similarity = recognition_not_save_img(person_id, f'encodings/{detect_face_method}', resized_image, detect_face_method)
     return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
 
