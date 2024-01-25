@@ -20,7 +20,7 @@ cd .\venv\Scripts\
 5. Cài đặt các thư viện cần thiết (nếu chạy trên máy có GPU thì bỏ dlib và face_recognition trong file requirements.txt)
 
 ```
-pip install --upgrade -r requirements.txt
+pip install -r requirements.txt
 ```
 
 6. Run app
@@ -28,8 +28,6 @@ pip install --upgrade -r requirements.txt
 ```
 py .\app.py
 ```
-
-7. Ảnh để test trong thư mục test_img
 
 # Cài đặt để chạy trên gpu
 
