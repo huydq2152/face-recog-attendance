@@ -61,11 +61,14 @@ def check_attendance():
     path_save = os.path.join(folder_path, unique_filename)
     if not os.path.exists(path_save):
         response = urlopen(origin_image_url)
-        with open(path_save, 'wb') as file:
-            file.write(response.read())
-            encodings_folder = f'encodings/{detect_face_method}'
-            dataset_folder = 'dataset'
-            encode(dataset_folder, encodings_folder, detect_face_method, [person_id])
+        origin_image_data = response.read()
+        nparr = np.frombuffer(origin_image_data, np.uint8)
+        origin_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        resized_origin_image = resize_image(origin_image, (300, 300))
+        cv2.imwrite(path_save, resized_origin_image)
+        encodings_folder = f'encodings/{detect_face_method}'
+        dataset_folder = 'dataset'
+        encode(dataset_folder, encodings_folder, detect_face_method, [person_id])
 
     image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
     resized_image = resize_image(image, (300, 300))
