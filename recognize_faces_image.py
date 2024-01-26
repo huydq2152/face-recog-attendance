@@ -48,6 +48,7 @@ def recognition_not_save_img(person_id, encodings_folder_name, image, detection_
     encodings = face_recognition.face_encodings(rgb, boxes)
 
     isConfirmAttendance = False
+    name = "Unknown"    
     percent_similarity = 0
     for encoding in encodings:
         match = any(face_recognition.compare_faces(data["encodings"], encoding, 0.5))      
