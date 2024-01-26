@@ -40,42 +40,44 @@ def index():
 
 @app.route('/check_attendance', methods=['POST'])
 def check_attendance():
-    if('person_id' not in request.form):
-        return jsonify({'message': 'Person_id is empty.'})
-    if('detect_face_method' not in request.form):
-        return jsonify({'message': 'Detect_face_method is empty.'})
-    if('origin_image_url' not in request.form):
-        return jsonify({'message': 'Origin_image_url is empty.'})
-    if('person_image' not in request.files):
-        return jsonify({'message': 'Person_image is empty.'})
-    person_id = request.form['person_id']
-    detect_face_method = request.form['detect_face_method']
-    origin_image_url = request.form['origin_image_url']
-    request_file = request.files['person_image']
+    try:
+        if('person_id' not in request.form):
+            return jsonify({'message': 'Person_id is empty.'})
+        if('detect_face_method' not in request.form):
+            return jsonify({'message': 'Detect_face_method is empty.'})
+        if('origin_image_url' not in request.form):
+            return jsonify({'message': 'Origin_image_url is empty.'})
+        if('person_image' not in request.files):
+            return jsonify({'message': 'Person_image is empty.'})
+        person_id = request.form['person_id']
+        detect_face_method = request.form['detect_face_method']
+        origin_image_url = request.form['origin_image_url']
+        request_file = request.files['person_image']
 
-    folder_path = os.path.join(DATESET_PATH, person_id)
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
-    image_url_hash = hashlib.md5(origin_image_url.encode()).hexdigest()
-    unique_filename = f"{image_url_hash}{os.path.splitext(request_file.filename)[1]}"
-    path_save = os.path.join(folder_path, unique_filename)
-    if not os.path.exists(path_save):
-        response = urlopen(origin_image_url)
-        origin_image_data = response.read()
-        nparr = np.frombuffer(origin_image_data, np.uint8)
-        origin_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        resized_origin_image = resize_image(origin_image, (300, 300))
-        cv2.imwrite(path_save, resized_origin_image)
-        encodings_folder = f'encodings/{detect_face_method}'
-        dataset_folder = 'dataset'
-        encode(dataset_folder, encodings_folder, detect_face_method, [person_id])
+        folder_path = os.path.join(DATESET_PATH, person_id)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        image_url_hash = hashlib.md5(origin_image_url.encode()).hexdigest()
+        unique_filename = f"{image_url_hash}{os.path.splitext(request_file.filename)[1]}"
+        path_save = os.path.join(folder_path, unique_filename)
+        if not os.path.exists(path_save):
+            response = urlopen(origin_image_url)
+            origin_image_data = response.read()
+            nparr = np.frombuffer(origin_image_data, np.uint8)
+            origin_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            resized_origin_image = resize_image(origin_image, (300, 300))
+            cv2.imwrite(path_save, resized_origin_image)
+            encodings_folder = f'encodings/{detect_face_method}'
+            dataset_folder = 'dataset'
+            encode(dataset_folder, encodings_folder, detect_face_method, [person_id])
 
-    image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
-    resized_image = resize_image(image, (300, 300))
+        image = cv2.imdecode(np.fromstring(request_file.read(), np.uint8), cv2.IMREAD_COLOR)
+        resized_image = resize_image(image, (300, 300))
 
-    isConfirmAttendance, person_id, percent_similarity = recognition_not_save_img(person_id, f'encodings/{detect_face_method}', resized_image, detect_face_method)
-    return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
-
+        isConfirmAttendance, person_id, percent_similarity = recognition_not_save_img(person_id, f'encodings/{detect_face_method}', resized_image, detect_face_method)
+        return jsonify({'message': 'Check attendance done.', 'isConfirmAttendance': isConfirmAttendance, 'person_id': person_id, 'percent_similarity': percent_similarity})
+    except Exception as e:
+        return jsonify({'message': str(e)})
 @app.route('/get_all_person_id', methods=['GET'])
 def get_all_person_id():
     person_ids = os.listdir(DATESET_PATH)
